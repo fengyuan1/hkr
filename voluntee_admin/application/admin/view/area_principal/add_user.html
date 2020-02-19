@@ -1,0 +1,93 @@
+<style>
+    .layui-layer .layui-layer-content {
+        overflow: visible;
+    }
+
+    .layui-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0 20px 0;
+    }
+
+    .layui-box .layui-form-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 10px 0 10px 0;
+    }
+
+    .layui-box .layui-form-label {
+        flex: 1;
+        margin: 0 5px 0 40px;
+    }
+
+    .layui-box .layui-input-block {
+        flex: 7;
+        margin: 0 40px 0 5px;
+    }
+
+    .layui-layer .layui-layer-content {
+        overflow: visible;
+    }
+    
+    .layui-form-item .layui-input-block {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .layui-input-block .layui-input-inline {
+        margin: 0;
+    }
+</style>
+<form class="layui-form layui-box" id="form" onsubmit="return false;" action="{:request()->url()}" data-auto="true" data-callback="" method="post">
+    <input type="hidden" name="id" value='{$id}'>
+    {foreach $area.area_name as $key => $vo}
+    <input type="hidden" name="area_name[{$key}]" value='{$vo}'>
+    {/foreach}
+    {foreach $area.area_id as $key => $vo}
+    <input type="hidden" name="area_id[{$key}]" value='{$vo}'>
+    {/foreach}
+    {foreach $area.area_code as $key => $vo}
+    <input type="hidden" name="area_code[{$key}]" value='{$vo}'>
+    {/foreach}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('登陆账号')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="username" required="required" pattern="^[0-9a-zA-Z]{6,16}$" value="" title="{:lang('数字字母，')}{:lang('6-16位')}" placeholder="{:lang('请输入')}{:lang('登陆账号')}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('登陆密码')}</label>
+        <div class="layui-input-block  input-compact">
+            <input type="text" name="password" value='' required="required" pattern="^[0-9a-zA-Z]{6,16}$" title="{:lang('数字字母，')}{:lang('6-16位')}" placeholder="{:lang('请输入')}{:lang('登陆密码')}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('确认密码')}</label>
+        <div class="layui-input-block  input-compact">
+            <input type="text" name="repeat_password" value='' required="required" title="{:lang('数字字母，')}{:lang('6-16位')}" placeholder="{:lang('请输入')}{:lang('密码')}" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form layui-box">
+        <div class="layui-form-item text-center">
+            <button class="layui-btn" type="submit">
+                确 认
+            </button>
+            <button class="layui-btn layui-btn-danger" type="button" onclick="goBack()">
+                返回
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.form.render();
+        function goBack() {
+            var url = '{:url("$classuri/add")}' + '?' + $.param({
+                'action': 'next',
+                'id': "{$id}"
+            });
+            $.form.modal(url, null, '添加管理区域');
+        }
+    </script>
+</form>>

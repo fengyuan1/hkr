@@ -1,0 +1,47 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+{/block} 
+{block name="pane"}
+<form class="animated form-search" action="__SELF__" onsubmit="return false" method="get">
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <input class="input-sm form-control" name="name" value="{$Think.get.name|default=''}" placeholder="搜索活动名称">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm btn-white">
+                <i class="fa fa-search"></i> {:lang('搜索')}
+            </button>
+        </div>
+    </div>
+</form>
+{/block} 
+{block name="list"}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>活动主题</th>
+                <th class='text-center'>活动类型</th>
+                <th class='text-center'>活动发起人</th>
+                <th class='text-center'>活动报名人数</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $vo}
+            <tr>
+                <td class='text-center nowrap'>
+                    <a data-open='{:url("$classuri/audit_list")}?id={$vo.activity_id}' href="javascript:void(0)">{$vo.activity_name}</a> 
+                </td>
+                <td class='text-center'>{$vo.type_name|default='无'}</td>
+                <td class='text-center'>{$vo.truename|default='无'}</td>
+                <td class='text-center'>{$vo.activity_sum|default=0}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</form>
+{/block}

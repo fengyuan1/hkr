@@ -1,0 +1,46 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+<div class="nowrap pull-right">
+    {if auth("$classuri/add")}
+    <button class="layui-btn layui-btn-small" data-modal='{:url("$classuri/add")}' data-title="添加等级">
+        添加等级
+    </button> 
+    {/if}
+</div>
+{/block} 
+{block name="list"}
+<form onsubmit="return false;" data-auto="" method="POST">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>等级名称</th>
+                <th class='text-center'>所需积分</th>
+                <th class='text-center'>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='text-center'>{$vo.name|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.integration|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center nowrap'>
+                    {if auth("$classuri/edit")}
+                        <span class="text-explode">|</span>
+                        <a data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-title="编辑等级信息" href="javascript:void(0)">
+                            编辑
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/del")}
+                        <span class="text-explode">|</span>
+                        <a data-action='{:url("$classuri/del")}?id={$vo.id}' href="javascript:void(0)">
+                            删除
+                        </a> 
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </td>
+    </table>
+</form>
+{/block}

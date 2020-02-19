@@ -1,0 +1,70 @@
+{extend name='extra@admin/content'}
+
+{block name="content"}
+
+
+<form onsubmit="return false;" data-auto="" method="POST">
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='text-center'>{:lang('序号')}</th>
+            <th class='text-center'>{:lang('用户名')}</th>
+            <th class='text-center'>{:lang('手机号')}</th>
+            <th class='text-center'>{:lang('身份证状态')}</th>
+            <th class='text-center'>{:lang('账户状态')}</th>
+            <th class='text-center'>{:lang('注册时间')}</th>
+            <th class='text-center'>{:lang('操作')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $k=>$v}
+        <tr>
+            <td class='text-center'>{$k+20*($Think.get.page|default =1)-19}</td>
+            <td class='text-center'>{$v.nickname}</td>
+            <td class='text-center'>{$v.phone}</td>
+            <td class='text-center'>
+                {eq name="$v.check_state" value="0"}
+                <font color="red">未通过</font>
+                {/eq}
+                {eq name="$v.check_state" value="1"}
+                <font color="green">审核通过</font>
+                {/eq}
+                {eq name="$v.check_state" value="2"}
+                <font color="red">审核中</font>
+                {/eq}
+                {eq name="$v.check_state" value="3"}
+                <font >未上传</font>
+                {/eq}
+
+            </td>
+            <td class='text-center'>
+                {eq name="$v.status" value="0"}
+                    <font color="green">正常</font>
+                {else/}
+                    <font color="red">禁用</font>
+                {/eq}
+            </td>
+            <td class='text-center'>{$v.initme|date="Y-m-d H:i:s",###}</td>
+            <td class='text-center nowrap'>
+
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/userinfo")}?id={$v.id}' data-title ="{$v.id_name}详细信息">{:lang('用户信息')}</a>
+                {/if}
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-open='{:url("$classuri/consumeRecord")}?id={$v.id}' data-title ="消费记录">{:lang('消费记录')}</a>
+                {/if}
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-open='{:url("$classuri/rechargeRecord")}?id={$v.id}' >{:lang('充值记录')}</a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {if isset($page)}<p>{$page}</p>{/if}
+</form>
+{/block}

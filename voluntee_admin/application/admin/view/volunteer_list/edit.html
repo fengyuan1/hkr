@@ -1,0 +1,74 @@
+{extend name='extra@admin/content2'}
+
+{block name="title"}
+<h5>{$title}</h5>
+{/block}
+
+{block name="content"}
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' id="form" action="__SELF__" data-auto="true" method="post" autocomplete="off">
+    <input type="hidden" value="{$data.id|default=''}" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('义工名称')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="name" value="{$data.truename|default=''}" placeholder="{:lang('请输入')}{:lang('义工名称')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('性别')}</label>
+        <div class="layui-input-block input-compact">
+            {if $data.sex === 0}
+                <input type="radio" name="sex" value="0" title="男" checked>
+                <input type="radio" name="sex" value="1" title="女">
+            {/if}
+            {if $data.sex === 1}
+                <input type="radio" name="sex" value="0" title="男">
+                <input type="radio" name="sex" value="1" title="女" checked>
+            {/if}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('身份证号')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="idcard" value="{$data.idcard|default=''}" title="{:lang('请输入')}{:lang('身份证号')}" placeholder="{:lang('请输入')}{:lang('身份证号')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('手机号码')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="input" name="phone" value="{$data.phone|default=''}" title="价格必须为数字" placeholder="{:lang('请输入')}{:lang('手机号码')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('紧急联系人')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="emergency_man" value="{$data.emergency_man|default=''}" placeholder="{:lang('请输入')}{:lang('紧急联系人')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('紧急联系电话')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="emergency_phone" value="{$data.emergency_phone|default=''}" title="预警数量不得超过5位数字" placeholder="{:lang('请输入')}{:lang('紧急联系电话')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit' lay-submit="">
+            {:lang('保存')}
+        </button>
+        <button class="layui-btn layui-btn-danger" type='button' data-open="{:url('index')}">
+            {:lang('返回')}
+        </button>
+    </div>
+
+    <script>
+        window.form.render();
+    </script>
+</form>
+{/block}

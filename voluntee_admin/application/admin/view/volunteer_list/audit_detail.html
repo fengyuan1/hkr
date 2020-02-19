@@ -1,0 +1,137 @@
+{extend name='extra@admin/content2'}
+
+{block name="title"}
+<h5>{$title}</h5>
+{/block}
+
+{block name="content"}
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' id="form" action="__SELF__" data-auto="true" method="post" autocomplete="off">
+    <input type="hidden" value="{$data.id|default=''}" name="id">
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('真实姓名')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" readonly style="cursor: not-allowed;" value="{$data.truename|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('昵称')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" readonly style="cursor: not-allowed;" value="{$data.nickname|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('性别')}</label>
+        <div class="layui-input-block input-compact">
+            {if $data.sex === 0}
+                <input type="radio" name="sex" value="0" title="男" checked disabled>
+                <input type="radio" name="sex" value="1" title="女" disabled>
+            {/if}
+            {if $data.sex === 1}
+                <input type="radio" name="sex" value="0" title="男" disabled>
+                <input type="radio" name="sex" value="1" title="女" checked disabled>
+            {/if}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('身份证号')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" readonly style="cursor: not-allowed;" value="{$data.idcard|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('手机号码')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="input" readonly style="cursor: not-allowed;" value="{$data.phone|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('紧急联系人')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" readonly style="cursor: not-allowed;" value="{$data.emergency_man|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('紧急联系电话')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" readonly style="cursor: not-allowed;" value="{$data.emergency_phone|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('所属机构')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" readonly style="cursor: not-allowed;" value="{$data.emergency_phone|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">审核状态</label>
+        <div class="layui-input-block" >
+            <select name="is_check" id="is_check" required lay-filter="is_check">
+                {switch $data.is_check}
+                {case 1}
+                    <option value="1" selected>通过</option>
+                    <option value="-1">不通过</option>
+                {/case}
+                {case -1}
+                    <option value="1">通过</option>
+                    <option value="-1" selected>不通过</option>
+                {/case}
+                {default /}
+                    <option value="1">通过</option>
+                    <option value="-1">不通过</option>
+                {/switch}
+            </select>
+        </div>
+    </div>
+
+    {if $data.is_check === 1}
+    <div class="layui-form-item layui-hide" id="error_msg">
+        <label class="layui-form-label">审核失败原因</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name= "error_msg" required="required" title="请填写审核失败原因" placeholder="请填写审核失败原因">
+        </div>
+    </div>
+    {/if}
+
+    {if $data.is_check === -1}
+    <div class="layui-form-item" id="error_msg">
+        <label class="layui-form-label">审核失败原因</label>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" value="{$data.error_msg}" name= "error_msg" required="required" title="请填写审核失败原因" placeholder="请填写审核失败原因">
+        </div>
+    </div>
+    {/if}
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit' lay-submit="">
+            {:lang('保存')}
+        </button>
+        <button class="layui-btn layui-btn-danger" type='button' data-open="{:url('index')}">
+            {:lang('返回')}
+        </button>
+    </div>
+
+    <script>
+        window.form.render();
+        form.on('select(is_check)', function(data){
+            if(data.value == -1) {
+                $('#error_msg').removeClass('layui-hide');
+            }
+            if(data.value == 1) {
+                $('#error_msg').addClass('layui-hide');
+                $('#error_msg').find('input').val('');
+                $('#error_msg').find('input').prop('disabled', true);
+            }
+        }); 
+    </script>
+</form>
+{/block}

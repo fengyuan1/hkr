@@ -1,0 +1,56 @@
+<style>
+    .layui-layer .layui-layer-content {
+        overflow: visible;
+    }
+
+    .layui-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0 20px 0;
+    }
+
+    .layui-box .layui-form-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 10px 0 10px 0;
+    }
+
+    .layui-box .layui-form-label {
+        flex: 1;
+        margin: 0 5px 0 40px;
+    }
+
+    .layui-box .layui-input-block {
+        flex: 7;
+        margin: 0 40px 0 5px;
+    }
+</style>
+
+{block name="style"}{/block}
+
+<form class="layui-form layui-box" id="form" onsubmit="return false;" action="{:request()->url()}" data-auto="true" data-callback="" method="post">
+    {block name="items"}{/block}
+
+    {if isset($data.id)}
+    <input type="hidden" name="id" value="{$data.id}">
+    {/if}
+
+    {include file="extra@admin/include/line"}
+
+    {block name="buttons"}
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type="submit">
+            确 认
+        </button>
+        <button class="layui-btn layui-btn-danger" type="button" data-confirm="确定要取消吗？" data-close>
+            取 消
+        </button>
+    </div>
+    {/block}
+</form>
+
+{block name="script"}{/block}
+
+{include file="extra@admin/include/form_script"}

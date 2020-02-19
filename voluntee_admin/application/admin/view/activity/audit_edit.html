@@ -1,0 +1,90 @@
+{extend name='extra@admin/form'}
+
+{block name="items"}
+<input type="hidden" name="id" class="layui-input" value="{$data.id|default=''}"> 
+<input type="hidden" name="activity_id" class="layui-input" value="{$data.activity_id|default=''}"> 
+<div class="layui-form-item">
+    <label class="layui-form-label">义工名称</label>
+    <div class="layui-input-block">
+        <input type="text" class="layui-input" value="{$data.name|default=''}" disabled> 
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">义工性别</label>
+    <div class="layui-input-block">
+        {if $data.sex === 0}
+        <input class="layui-input" value="男" disabled> 
+        {/if}
+        {if $data.sex === 1}
+        <input class="layui-input" value="女" disabled> 
+        {/if}
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">义工联系方式</label>
+    <div class="layui-input-block">
+        <input type="text"  class="layui-input" value="{$data.phone|default=''}" disabled>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">义工等级</label>
+    <div class="layui-input-block">
+        <input type="text"  class="layui-input" value="{$data.level|default=''}" disabled>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">义工所在区域</label>
+    <div class="layui-input-block">
+        <input type="text"  class="layui-input" value="{$data.code|default=''}" disabled>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">审核情况</label>
+    <div class="layui-input-block" >
+        <select name="is_check" id="is_check" required lay-filter="is_check">
+            {switch $data.is_check}
+            {case 1}
+                <option value="1" selected>通过</option>
+                <option value="-1">不通过</option>
+            {/case}
+            {case -1}
+                <option value="1">通过</option>
+                <option value="-1" selected>不通过</option>
+            {/case}
+            {default /}
+                <option value="1">通过</option>
+                <option value="-1">不通过</option>
+            {/switch}
+        </select>
+    </div>
+</div>
+{if $data.is_check === 1}
+<div class="layui-form-item layui-hide" id="error_msg">
+    <label class="layui-form-label">审核失败原因</label>
+    <div class="layui-input-block">
+        <input type="text" class="layui-input" name= "error_msg" required="required" title="请填写审核失败原因" placeholder="请填写审核失败原因">
+    </div>
+</div>
+{/if}
+{if $data.is_check === -1}
+<div class="layui-form-item" id="error_msg">
+    <label class="layui-form-label">审核失败原因</label>
+    <div class="layui-input-block">
+        <input type="text" class="layui-input" value="{$data.error_msg}" name= "error_msg" required="required" title="请填写审核失败原因" placeholder="请填写审核失败原因">
+    </div>
+</div>
+{/if}
+{/block}
+{block name="script"}
+<script>
+form.on('select(is_check)', function(data){
+    if(data.value == -1) {
+        $('#error_msg').removeClass('layui-hide');
+    }
+    if(data.value == 1) {
+        $('#error_msg').addClass('layui-hide');
+        $('#error_msg').find('input').val('');
+    }
+}); 
+</script>
+{/block}

@@ -1,0 +1,102 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+{/block} 
+{block name="pane"}
+<form class="animated form-search" action="__SELF__" onsubmit="return false" method="get">
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <input class="input-sm form-control" name="search" value="{$Think.get.search|default=''}" placeholder="真实姓名|昵称">
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="form-group">
+                <select name="is_check" class="input-sm form-control">
+                    {foreach $select as $vo}
+                    {if $Think.get.is_check === $vo.value}
+                    <option value="{$vo.value}" selected>{:lang($vo.name)}</option>
+                    {else /}
+                    <option value="{$vo.value}">{:lang($vo.name)}</option>
+                    {/if}
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-sm btn-white">
+                <i class="fa fa-search"></i> {:lang('搜索')}
+            </button>
+        </div>
+    </div>
+</form>
+{/block} 
+{block name="list"}
+<form onsubmit="return false;" data-auto="" method="POST">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>真实姓名</th>
+                <th class='text-center'>昵称</th>
+                <th class='text-center'>性别</th>
+                <th class='text-center'>身份证号</th>
+                <th class='text-center'>手机号码</th>
+                <th class='text-center'>紧急联系人</th>
+                <th class='text-center'>紧急联系电话</th>
+                <th class='text-center'>所属机构</th>
+                <th class='text-center'>审核状态</th>
+                <th class='text-center'>审核时间</th>
+                <th class='text-center'>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='text-center'>{$vo.truename|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.nickname|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.sex}</td>
+                <td class='text-center'>{$vo.idcard|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.phone|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.emergency_man|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.emergency_phone|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>所属机构</td>
+                <td class='text-center'>
+                    {switch $vo.is_check}
+                        {case 0}
+                        <span>未审核</span>
+                        {/case}
+                        {case 1}
+                        <span style='color:green;'>通过</span>
+                        {/case}
+                        {case -1}
+                        <span style='color:red;'>未通过</span>
+                        {/case}
+                        {default /}
+                        <span style='color:gray;'>---</span>
+                    {/switch}
+                </td>
+                {if $vo.is_check === 1}
+                <td class='text-center'>{$vo.check_time}</td>
+                {else /}
+                <td class='text-center'>---</td>
+                {/if}
+                <td class='text-center nowrap'>
+                    {if auth("$classuri/edit")}
+                        <span class="text-explode">|</span>
+                        <a data-open='{:url("$classuri/audit_detail")}?id={$vo.id}' href="javascript:void(0)">
+                            审核
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/del")}
+                        <span class="text-explode">|</span>
+                        <a data-action='{:url("$classuri/del")}' data-update="{$vo.id}" href="javascript:void(0)">
+                            删除
+                        </a> 
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </td>
+    </table>
+</form>
+{/block}

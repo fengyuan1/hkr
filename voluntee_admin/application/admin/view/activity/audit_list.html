@@ -1,0 +1,100 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+{/block} 
+{block name="pane"}
+<form class="animated form-search" action="__SELF__" onsubmit="return false" method="get">
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <input class="input-sm form-control" name="name" value="{$Think.get.name|default=''}" placeholder="搜索义工名称">
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="form-group">
+                <select name="is_check" class="input-sm form-control">
+                    {foreach $select as $vo}
+                    {if $Think.get.is_check === $vo.value}
+                    <option value="{$vo.value}" selected>{:lang($vo.name)}</option>
+                    {else /}
+                    <option value="{$vo.value}">{:lang($vo.name)}</option>
+                    {/if}
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="form-group group-title">
+            <button type="submit" class="btn btn-sm btn-white">
+                <i class="fa fa-search"></i> {:lang('搜索')}
+            </button>
+            <span>活动主题: {$area_user.title}</span>
+            <span>活动类型: {$area_user.type_name}</span>
+            <span>活动发起人: {$area_user.truename}</span>
+        </div>
+    </div>
+</form>
+<style>
+.group-title {
+    display: flex;
+    align-items: center;
+}
+.group-title span{
+    padding: 0 15px;
+}
+</style>
+{/block} 
+{block name="list"}
+<form onsubmit="return false;" data-auto="true" method="post">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>义工名称</th>
+                <th class='text-center'>义工等级</th>
+                <th class='text-center'>义工所属区域</th>
+                <th class='text-center'>报名时间</th>
+                <th class='text-center'>审核状态</th>
+                <th class='text-center'>审核时间</th>
+                <th class='text-center'>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $vo}
+            <tr>
+                <td class='text-center'>{$vo.name|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.level|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.localtion|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.create_time|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>
+                    {switch $vo.is_check}
+                        {case 0}
+                        <span>未审核</span>
+                        {/case}
+                        {case 1}
+                        <span style='color:green;'>通过</span>
+                        {/case}
+                        {case -1}
+                        <span style='color:red;'>未通过</span>
+                        {/case}
+                        {default /}<span style='color:gray;'>---</span>
+                    {/switch}
+                </td>
+                <td class='text-center'>{$vo.audit_time|default="<span style='color:gray;'>---</span>"}</td>
+                <td class='text-center nowrap'>
+                    {if auth("$classuri/audit_detail")}
+                    <a data-modal='{:url("$classuri/audit_detail")}?user_id={$vo.id}&activity_id={$Think.get.id|default=""}' data-title="详情" href="javascript:void(0)">
+                        详情
+                    </a> 
+                    {/if}
+                    {if auth("$classuri/audit_edit")}
+                    <span class="text-explode">|</span>
+                    <a data-modal='{:url("$classuri/audit_edit")}?user_id={$vo.id}&activity_id={$Think.get.id|default=""}' data-title="编辑" href="javascript:void(0)">
+                        编辑
+                    </a> 
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</form>
+{/block}

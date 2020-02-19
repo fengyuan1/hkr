@@ -1,0 +1,13 @@
+<input type="hidden" name="id" value="{$data.id|default=''}">
+<div class="layui-form-item">
+    <label class="layui-form-label">等级名称</label>
+    <div class="layui-input-block">
+        <input class="layui-input" name="name" value="{$data.level_name|default=''}" title="{:lang('请输入')}{:lang('等级名称')}" required="required" placeholder="{:lang('请输入')}{:lang('等级名称')}">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label">所需积分</label>
+    <div class="layui-input-block">
+        <input class="layui-input" pattern="^[0-9]{0,10}$" name="integration" value="{$data.integration|default=''}" title="{:lang('正整数，')}{:lang('最大十位数字')}" required="required" placeholder="{:lang('请输入')}{:lang('所需积分')}">
+    </div>
+</div>

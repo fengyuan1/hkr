@@ -1,0 +1,20 @@
+{if isset($data.authorize) && in_array(config('auth.root_auth_id'), $data.authorize)}
+
+{else/}
+<div class="layui-form-item">
+    <label class="layui-form-label">{:lang('访问授权')}</label>
+    <div class="layui-input-block">
+        {if empty($authorizes)}
+        <span style="line-height:36px; color: grey;">未配置权限</span>
+        {else /}
+        {foreach $authorizes as $auth}
+        {if isset($data.authorize) && in_array($auth.id, $data.authorize)}
+        <input type="checkbox" name="authorize[]" value="{$auth.id}" title="{$auth.title}" checked>
+        {else /}
+        <input type="checkbox" name="authorize[]" value="{$auth.id}" title="{$auth.title}">
+        {/if}
+        {/foreach}
+        {/if}
+    </div>
+</div>
+{/if}

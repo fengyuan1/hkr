@@ -1,0 +1,60 @@
+{extend name='extra@admin/content'}
+
+{block name="content"}
+
+
+<form onsubmit="return false;" data-auto="" method="POST">
+    {eq name="$list->isEmpty()"  value="1"}
+    <font size="4"> 该用户没有消费记录</font>
+    {else /}
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='text-center'>{:lang('序号')}</th>
+            <th class='text-center'>{:lang('订单号')}</th>
+            <th class='text-center'>{:lang('支付方式')}</th>
+            <th class='text-center'>{:lang('交易状态')}</th>
+            <th class='text-center'>{:lang('下单时间')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $k=>$v}
+        <tr>
+            <td class='text-center'>{$k+20*($Think.get.page|default =1)-19}</td>
+            <td class='text-center'>{$v.order_num}</td>
+            <td class='text-center'>
+                {eq name="$v.pay_type" value="0"}
+                    --
+                {/eq}
+                {eq name="$v.pay_type" value="1"}
+                    微信
+                {/eq}
+                {eq name="$v.pay_type" value="2"}
+                    支付宝
+                {/eq}
+                {eq name="$v.pay_type" value="3"}
+                    钱包
+                {/eq}
+                {eq name="$v.pay_type" value="4"}
+                    优惠券
+                {/eq}
+            </td>
+            <td class='text-center'>
+                {eq name="$v.pay_status" value="1"}
+                   <font color="green">已支付</font>
+                {/eq}
+                {eq name="$v.pay_status" value="0"}
+                    <font color="red">未支付 </font>
+                {/eq}
+            </td>
+            <td class='text-center'>{$v.create_time}</td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    {/eq}
+    {if isset($page)}<p>{$page}</p>{/if}
+</form>
+{/block}

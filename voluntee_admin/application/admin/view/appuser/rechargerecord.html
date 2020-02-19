@@ -1,0 +1,54 @@
+{extend name='extra@admin/content'}
+
+{block name="content"}
+
+
+<form onsubmit="return false;" data-auto="" method="POST">
+    {if empty($list)}
+        <font size="4"> 该用户没有充值记录</font>
+    {else /}
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='text-center'>{:lang('序号')}</th>
+            <th class='text-center'>{:lang('充值单号')}</th>
+            <th class='text-center'>{:lang('充值金额')}</th>
+            <th class='text-center'>{:lang('充值时间')}</th>
+            <th class='text-center'>{:lang('支付状态')}</th>
+            <th class='text-center'>{:lang('付款途径')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $k=>$v}
+        <tr>
+            <td class='text-center'>{$k+1}</td>
+            <td class='text-center'>{$v.order_num}</td>
+            <td class='text-center'>{$v.amount}</td>
+            <td class='text-center'>{$v.create_time}</td>
+            <td class='text-center'>
+                {eq name="$v.pay_status" value="1"}
+                已支付
+                {/eq}
+                {eq name="$v.pay_status" value="0"}
+                未支付
+                {/eq}
+            </td>
+            <td class='text-center'>
+                {eq name="$v.pay_type" value="1"}
+                    微信
+                {/eq}
+                {eq name="$v.pay_type" value="2"}
+                    支付宝
+                {/eq}
+            </td>
+
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+    {/if}
+    {if isset($page)}<p>{$page}</p>{/if}
+</form>
+{/block}

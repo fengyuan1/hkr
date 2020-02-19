@@ -1,0 +1,31 @@
+{extend name='extra@admin/form'}
+
+{block name="items"}
+<div class="layui-form-item">
+    <label class="layui-form-label">{:lang('用户名称')}</label>
+    <div class="layui-input-block">
+        <input class="layui-input" value="{$data.username|default=''}" disabled>
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">{:lang('旧的密码')}</label>
+    <div class="layui-input-block">
+        <input class="layui-input" type="password" name="current_password" value="" pattern="^[A-Za-z0-9]{1,40}$" title="请输入旧的密码" placeholder="{:lang('请输入')}{:lang('旧的密码')}" required>
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">{:lang('新的密码')}</label>
+    <div class="layui-input-block">
+        <input class="layui-input" type="password" name="password" value="" pattern="^[A-Za-z0-9]{6,12}$" title="请输入6-12位数字或字母" placeholder="{:lang('请输入')}{:lang('新的密码')}" required>
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">{:lang('重复密码')}</label>
+    <div class="layui-input-block">
+        <input class="layui-input" type="password" name="repassword" value="" pattern="^[A-Za-z0-9]{6,12}$" title="请输入6-12位数字或字母" placeholder="{:lang('请重复输入密码')}" required>
+    </div>
+</div>
+{/block}

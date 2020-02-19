@@ -1,0 +1,150 @@
+{extend name='extra@admin/list'}
+
+{block name="title"}
+<h5>系统管理员</h5>
+{/block}
+
+{block name="pane"}
+<div class="nowrap pull-right">
+    {if auth("$classuri/add")}
+    <button data-modal='{:url("$classuri/add")}' data-title="{:lang('添加用户')}" class="layui-btn layui-btn-small">
+        {:lang('添加用户')}
+    </button>
+    {/if}
+
+    {if auth("$classuri/batchDel")}
+    <button data-update data-field='delete' data-action='{:url("$classuri/batchDel")}' class="layui-btn layui-btn-small layui-btn-danger">
+        {:lang('删除用户')}
+    </button>
+    {/if}
+</div>
+
+<form class="animated form-search" action="{:request()->baseUrl()}" onsubmit="return false" method="get">
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="form-group">
+                <input type="text" name="username" value="{$Think.get.username|default=''}" placeholder="{:lang('用户名称')}" class="input-sm form-control">
+            </div>
+        </div>
+
+        <div class="col-xs-3">
+            <div class="form-group">
+                <input type="text" name="phone" value="{$Think.get.phone|default=''}" placeholder="{:lang('手机号')}" class="input-sm form-control">
+            </div>
+        </div>
+
+        <div class="col-xs-1">
+            <div class="form-group">
+                <button type="submit" class="btn btn-sm btn-white">
+                    <i class="fa fa-search"></i> {:lang('搜索')}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name="list"}
+<form onsubmit="return false;" data-auto="" method="POST">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class='list-table-check-td'>
+                <input data-none-auto="" data-check-target='.list-check-box' type='checkbox'/>
+            </th>
+            <th class='text-center'>{:lang('用户名称')}</th>
+            <th class='text-center'>{:lang('手机号')}</th>
+            <th class='text-center'>{:lang('联系邮箱')}</th>
+            <th class='text-center'>{:lang('登录次数')}</th>
+            <th class='text-center'>{:lang('最后登录')}</th>
+            <th class='text-center'>{:lang('微信绑定状态')}</th>
+            <th class='text-center'>{:lang('状态')}</th>
+            <th class='text-center'>{:lang('操作')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $key => $vo}
+        <tr>
+            <td class='list-table-check-td'>
+                <input class="list-check-box" value='{$vo.id}' type='checkbox'/>
+            </td>
+            <td class='text-center'>{$vo.username}</td>
+            <td class='text-center'>{$vo.phone}</td>
+            <td class='text-center'>{$vo.mail}</td>
+            <td class='text-center'>{$vo.login_num}</td>
+            <td class='text-center'>{$vo.login_at}</td>
+            <td class='text-center'>
+                {if $vo.has_openid}
+                <span style="color: green;">{:lang('已绑定')}</span>
+                {else /}
+                <span style="color: red;">{:lang('未绑定')}</span>
+                {/if}
+            </td>
+            <td class='text-center'>
+                {switch $vo.status}
+                    {case 0}
+                    <span style="color: red;">{:lang('已禁用')}</span>
+                    {/case}
+                    {case 1}
+                    <span style="color: green;">{:lang('使用中')}</span>
+                    {/case}
+                {/switch}
+            </td>
+            <td class='text-center nowrap'>
+                {if auth("$classuri/edit")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-title="编辑" href="javascript:void(0)">
+                    {:lang('编辑')}
+                </a>
+                {/if}
+
+                {if auth("$classuri/auth") && $vo.authorize != config("auth.root_auth_id")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/auth")}?id={$vo.id}' data-title="授权" href="javascript:void(0)">
+                    {:lang('授权')}
+                </a>
+                {/if}
+
+                {if auth("$classuri/password")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/password")}?id={$vo.id}' data-title="密码" href="javascript:void(0)">
+                    {:lang('密码')}
+                </a>
+                {/if}
+
+                {if auth("$classuri/status")}
+                <span class="text-explode">|</span>
+                    {switch $vo.status}
+                        {case 0}
+                        <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="1" href="javascript:void(0)">
+                            {:lang('启用')}
+                        </a>
+                        {/case}
+                        {case 1}
+                        <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="0" href="javascript:void(0)">
+                            {:lang('禁用')}
+                        </a>
+                        {/case}
+                    {/switch}
+                {/if}
+
+                {if auth("$classuri/qrcode")}
+                <span class="text-explode">|</span>
+                <a data-modal='{:url("$classuri/qrcode")}?id={$vo.id}' data-title="查看二维码" href="javascript:void(0)">
+                    查看二维码
+                </a>
+                {/if}
+
+                {if auth("$classuri/del") && $vo.authorize != config("auth.root_auth_id")}
+                <span class="text-explode">|</span>
+                <a data-action='{:url("$classuri/del")}' data-update="{$vo.id}" href="javascript:void(0)">
+                    删除
+                </a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</form>
+{/block}

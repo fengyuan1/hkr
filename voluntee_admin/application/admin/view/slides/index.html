@@ -1,0 +1,66 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+<div class="nowrap pull-right">
+    {if auth("$classuri/add")}
+    <button class="layui-btn layui-btn-small" data-open='{:url("$classuri/add")}' data-title="添加banner">
+        添加banner
+    </button> 
+    {/if}
+</div>
+{/block} 
+{block name="list"}
+<form onsubmit="return false;" data-auto="" method="POST">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>Banner名称</th>
+                <th class='text-center'>Banner图片</th>
+                <th class='text-center'>地址</th>
+                <th class='text-center'>是否显示</th>
+                <th class='text-center'>添加时间</th>
+                <th class='text-center'>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='text-center'>{$vo.name|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>
+                    <img height="50px" src="{$vo.image|default=''}" alt="" class="layui-imgs">
+                </td>
+                <td class='text-center'>{$vo.url|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.statusMsg|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.create_time|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center nowrap'>
+                    {if auth("$classuri/edit")}
+                        <a data-open='{:url("$classuri/edit")}?id={$vo.id}' href="javascript:void(0)">
+                            编辑
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/status")}
+                        <span class="text-explode">|</span> 
+                        {if $vo.status === 0}
+                            <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="1" href="javascript:void(0)">
+                                隐藏
+                            </a> 
+                        {/if} 
+                        {if $vo.status === 1}
+                            <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="0" href="javascript:void(0)">
+                                显示
+                            </a> 
+                        {/if} 
+                    {/if} 
+                    {if auth("$classuri/del")}
+                        <span class="text-explode">|</span>
+                        <a data-action='{:url("$classuri/del")}' data-update="{$vo.id}" href="javascript:void(0)">
+                            删除
+                        </a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            </td>
+    </table>
+</form>
+{/block}

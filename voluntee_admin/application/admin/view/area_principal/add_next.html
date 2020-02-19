@@ -1,0 +1,197 @@
+<style>
+    
+    .layui-layer .layui-layer-content {
+        overflow: visible;
+    }
+
+    .layui-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0 20px 0;
+    }
+
+    .layui-box .layui-form-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 10px 0 10px 0;
+    }
+
+    .layui-box .layui-form-label {
+        flex: 1;
+        margin: 0 5px 0 40px;
+    }
+
+    .layui-box .layui-input-block {
+        flex: 7;
+        margin: 0 40px 0 5px;
+    }
+
+    .layui-layer .layui-layer-content {
+        overflow: visible;
+    }
+    
+    .layui-form-item .layui-input-block {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .layui-input-block .layui-input-inline {
+        margin: 0;
+    }
+</style>
+<div class="layui-form layui-box">
+    <div class="layui-form-item">
+        <label class="layui-form-label" style="margin: 0 5px 0 20px;">所属地区</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline layui-form">
+                <select lay-filter="province" lay-verify="required" id="province">
+                    <option value="">{:lang('请选择省')}</option>
+                    {foreach $province as $vo}
+                    <option value="{$vo.id|default=''}">{$vo.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="layui-input-inline layui-form">
+                <select lay-filter="city" id="city">
+                    <option value="{$region.mid.id|default=''}" selected>{$region.mid.name|default='请选择市'}</option>
+                </select>
+            </div>
+            <div class="layui-input-inline layui-form">
+                <select lay-filter="region" id="region">
+                    <option value="{$region.last.id|default=''}" selected>{$region.last.name|default='请选择区'}</option>
+                </select>
+            </div>
+            <div style="margin-left: 10px;">
+                <span class="layui-btn site-demo-active" id="tabAdd">确认</span>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-tab" lay-filter="demo" lay-allowclose="true">
+            <ul class="layui-tab-title" style="max-width: 600px;">
+            </ul>
+        </div>
+        <!-- layui-tab-more -->
+    </div>
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type="submit" onclick="addUser()">
+            确 认
+        </button>
+        <button class="layui-btn layui-btn-danger" type="button" onclick="goBack()">
+            返回
+        </button>
+    </div>
+</div>
+
+<script>
+    window.form.render();
+   
+    function goBack() {
+        var url = '{:url("$classuri/add")}';
+        $.form.modal(url, null, '添加区域负责人');
+    }
+    var arr = {
+        area_id: [],
+        area_code: [],
+        area_name: []
+    };
+    function addUser() {
+        if(arr.area_id.length < 1) {
+            $.msg.error('请选择一个管理区域');
+            return false;
+        }
+        var url = '{:url("$classuri/add")}';
+        var list = {
+            action: 'addUser',
+            id: '{$id}',
+            area_id: arr.area_id,
+            area_code: arr.area_code,
+            area_name: arr.area_name
+        };
+        $.form.modal(url, list, '添加登录账号', null, null, null, 'POST');
+    }   
+    layui.use('element', function(){
+        var element = layui.element();
+        $('#tabAdd').click(function() {
+            let isCity = $('#city').val();
+            if(!isCity){
+                $.msg.error('最少选择市');
+                return false;
+            }
+            let params = [
+                {
+                    name: $('#province option:selected').text(),
+                    value: $('#province option:selected').val(),
+                    code: $('#province option:selected').attr('defaultvalue')
+                },
+                {
+                    name: $('#city option:selected').text(),
+                    value: $('#city option:selected').val(),
+                    code: $('#city option:selected').attr('defaultvalue')
+                },
+                {
+                    name: $('#region option:selected').val() ? $('#region option:selected').text() : '',
+                    value: $('#region option:selected').val(),
+                    code: $('#region option:selected').attr('defaultvalue')
+                },
+            ];
+            let name = '';
+            let id = 0;
+            let code = 0;
+            if($('#region option:selected').val()) {
+                name = params[0].name + "-" + params[1].name + "-" + params[2].name;
+                id = params[2].value;
+                code = params[2].code;
+            } else {
+                name = params[0].name + params[1].name;
+                id = params[1].value;
+                code = params[1].code;
+            }
+            if((arr.area_id.length > 0) && (arr.area_id.indexOf(id) !== -1)) {
+                $.msg.error("所选地区不能相同");
+                return false;
+            }
+            arr.area_id.push(id);
+            arr.area_code.push(code);
+            arr.area_name.push(name);
+            element.tabAdd('demo', {
+                title: name,
+                id: id
+            })
+        })
+    });
+    
+    form.on('select(province)', function(data) {
+        let str = '<option value="">请选择市</option>';
+        asyncOptions(data, str, 'city', true)
+    }); 
+    form.on('select(city)', function(data) {
+        let str = '<option value="">请选择区</option>';
+        asyncOptions(data, str, 'region')
+    })
+
+    function asyncOptions(data = {}, strDefault = '', name = '', isRegion = false) {
+        $.ajax({
+            url: "{:url('get_area')}",
+            type: "GET",
+            data: {
+                id: data.value
+            },
+            success: function (res) {
+                res.forEach(e => {
+                    strDefault += '<option defaultValue="'+ e.code +'" value="'+ e.id +'">'+ e.name +'</option>';
+                });
+                $('#'+ name).html(strDefault);
+                if(isRegion) {
+                    $('#region').html('<option value="">请选择区</option>');
+                }
+                form.render("select", name);
+            },
+            error: function (err) {
+                $.msg.error("获取地区信息失败");
+            },
+        });
+    }
+</script>

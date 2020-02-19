@@ -1,0 +1,84 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' id="form" action="__SELF__" data-auto="true" method="post" autocomplete="off" enctype="multipart/form-data">
+    {if isset($data)}
+    <input type="hidden" value="{$data.id|default=''}" name="id">
+    {/if}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('内容标题')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="title" value="{$data.title|default=''}" title="{:lang('请输入')}{:lang('内容标题')}" required="required" placeholder="{:lang('请输入')}{:lang('内容标题')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('排序')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="sort" value="{$data.sort|default=''}" title="{:lang('请输入')}{:lang('排序')}" required="required" placeholder="{:lang('请输入')}{:lang('排序')}" class="layui-input" lay-verify="sort">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('是否上架')}</label>
+        <div class="layui-input-block input-compact">
+            {if isset($data)}
+                {if $data.status === 0}
+                    <input type="radio" name="status" value="0" title="上架" checked>
+                    <input type="radio" name="status" value="1" title="下架">
+                {/if}
+                {if $data.status === 1}
+                    <input type="radio" name="status" value="0" title="上架">
+                    <input type="radio" name="status" value="1" title="下架" checked>
+                {/if}
+            {else /}
+                <input type="radio" name="status" value="0" title="上架" checked>
+                <input type="radio" name="status" value="1" title="下架">
+            {/if}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('内容')}</label>
+        <div class="layui-input-block">
+            <textarea name="content" id="content" placeholder="{:lang('请输入')}{:lang('内容')}" title="{:lang('请输入')}{:lang('内容')}" style="width:100%;height:500px;margin:0px" class="layui-textarea">
+                {$data.content|default=''}
+            </textarea>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit' lay-submit="">
+            {:lang('保存')}
+        </button>
+        <button class="layui-btn layui-btn-danger" type='button' data-open="{:url('index')}">
+            {:lang('返回')}
+        </button>
+    </div>
+
+    <script>
+        window.form.render();
+        $(function () {
+            require(['ueditor'], function () {
+                var editor = window.createEditor('[ name="content"]', 'basic');
+            });
+        });
+        form.verify({
+            sort: function(value, item){
+                if((/^[0-9]$/.test(value) === false) || (value < 0) ||(value > 20)) {
+                    return '请输入1~20范围内的数字';
+                }
+            },
+        })
+        
+    </script>
+    <style>
+        .before::after{
+            content: '*';
+            color: red;
+            position: absolute;
+            margin-left: 4px;
+            font-weight: bold;
+            line-height: 1.8em;
+        }
+    </style>
+</form>

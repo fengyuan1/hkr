@@ -1,0 +1,29 @@
+{foreach $list as $key => $vo}
+    <tr>
+        <td style="display: none;">
+            <input class="this-id" type="radio" name="id" value="{$vo.id}" />
+        </td>
+        <td class='text-center'>{$vo.truename}</td>
+        <td class='text-center'>
+            {if $vo.sex === 0}
+                男
+            {else /}
+                女
+            {/if}
+        </td>
+        <td class='text-center'>{$vo.phone}</td>
+    </tr>
+{/foreach}
+<script>
+    $('.this tbody tr').click(function() {
+        $('.this tbody tr').each(function(index, element) {
+            $(element).css({
+                'background-color': ''
+            }).find('input[type=radio]').prop('checked', false);
+        });
+
+        $(this).css({
+            'background-color': '#e2dede'
+        }).find('input[type=radio]').prop('checked', 'checked');
+    });
+</script>

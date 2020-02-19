@@ -1,0 +1,105 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' id="form" action="__SELF__" data-auto="true" method="post" autocomplete="off" enctype="multipart/form-data">
+    {if isset($data)}
+    <input type="hidden" value="{$data.id|default=''}" name="id">
+    {/if}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('Banner名称')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="name" value="{$data.name|default=''}" title="{:lang('请输入')}{:lang('Banner名称')}" required="required" placeholder="{:lang('请输入')}{:lang('Banner名称')}" class="layui-input"lay-verify="name">
+        </div>
+    </div>
+
+    <div class="layui-form-item" id="div">
+        <label class="layui-form-label before">{:lang('商品图片')}</label>
+        <div style="position:relative;float:left">
+            <div class="uploadimage transition">
+                {if isset($data)}
+                <div class="uploadimage transition" id="url_1" data-tips-image="{$data.image|default=''}" style="background-image: url({$data.image});">
+                    <input type="hidden" name="img" value="{$data.image|default=''}" data-md5="eca45d7158123c8a368e332d9cdb21ab" lay-verify="image">
+                </div>
+                {else /}
+                <div class="uploadimage transition" id="url_1" data-tips-image="">
+                    <input type="hidden" name="img" value="" data-md5="eca45d7158123c8a368e332d9cdb21ab" lay-verify="image">
+                </div>
+                {/if}
+            </div>
+            <div style="float:right">
+                <a data-file="one" data-field="img" data-type="png,jpeg,gif,jpg" href="javascript:void(0)" class="uploadbutton">
+                    {:lang('上传终端机图片')}
+                </a>
+                <div id="img_1"><a>删除</a></div>
+            </div>
+        </div>
+        <script>
+            require(['jquery'], function () {
+                $('[name="img" ]').on('change', function () {
+                    $(this).parent().attr('data-tips-image', this.value).css('backgroundImage', 'url(' + this.value + ')');
+                });
+            });
+            $('#img_1').click(function() {
+                $('#url_1').attr('data-tips-image', '')
+                $('#url_1').css('background-image', 'url()');
+                $('#url_1 > input').val('');
+            })
+        </script>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('链接地址')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="url" value="{$data.url|default=''}" required="required" title="{:lang('请输入')}{:lang('链接地址')}" placeholder="{:lang('请输入')}{:lang('链接地址')}" class="layui-input"lay-verify="specs">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('是否显示')}</label>
+        <div class="layui-input-block input-compact">
+            {if !isset($data)}
+                <input type="radio" name="status" value="0" title="显示" checked>
+                <input type="radio" name="status" value="1" title="隐藏">
+            {/if}
+            {if isset($data)}
+                {if $data.status === 0}
+                    <input type="radio" name="status" value="0" title="显示" checked>
+                    <input type="radio" name="status" value="1" title="隐藏">
+                {/if}
+                {if $data.status === 1}
+                    <input type="radio" name="status" value="0" title="显示">
+                    <input type="radio" name="status" value="1" title="隐藏" checked>
+                {/if}
+            {/if}
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit' lay-submit="">
+            {:lang('保存')}
+        </button>
+        <button class="layui-btn layui-btn-danger" type='button' data-open="{:url('index')}">
+            {:lang('返回')}
+        </button>
+    </div>
+
+    <script>
+        window.form.render();
+        form.verify({
+            image: function(value, item){
+                if(value.length <= 0) {
+                    return '图片未上传';
+                }
+            },
+        })
+    </script>
+    <style>
+        .before::after{
+            content: '*';
+            color: red;
+            position: absolute;
+            margin-left: 4px;
+            font-weight: bold;
+            line-height: 1.8em;
+        }
+    </style>
+</form>

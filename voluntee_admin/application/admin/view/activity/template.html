@@ -1,0 +1,198 @@
+<form class="layui-form layui-box" style='padding:25px 30px 20px 0' id="form" action="__SELF__" data-auto="true" method="post" autocomplete="off" enctype="multipart/form-data">
+    {if isset($data)}
+    <input type="hidden" value="{$data.id|default=''}" name="id">
+    {/if}
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('活动主题')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="title" value="{$data.activity_name|default=''}" title="{:lang('请输入')}{:lang('活动主题')}" required="required" placeholder="{:lang('请输入')}{:lang('活动主题')}" class="layui-input"lay-verify="name">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('活动地点')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="address" value="{$data.address|default=''}" required="required" title="{:lang('请输入')}{:lang('活动地址')}" placeholder="{:lang('请输入')}{:lang('活动地址')}" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item" id="div">
+        <label class="layui-form-label before">{:lang('活动图片')}</label>
+        <div style="position:relative;float:left">
+            <div class="uploadimage transition">
+                {if isset($data)}
+                <div class="uploadimage transition" id="url_1" data-tips-image="{$data.image|default=''}" style="background-image: url({$data.img});">
+                    <input type="hidden" name="img" value="{$data.img|default=''}" data-md5="eca45d7158123c8a368e332d9cdb21ab" lay-verify="image">
+                </div>
+                {else /}
+                <div class="uploadimage transition" id="url_1" data-tips-image="{$data.image|default=''}">
+                    <input type="hidden" name="img" value="{$data.img|default=''}" data-md5="eca45d7158123c8a368e332d9cdb21ab" lay-verify="image">
+                </div>
+                {/if}
+            </div>
+            <div style="float:right">
+                <a data-file="one" data-field="img" data-type="png,jpeg,gif,jpg" href="javascript:void(0)" class="uploadbutton">
+                    {:lang('上传活动图片')}
+                </a>
+                <div id="img_1"><a>删除</a></div>
+            </div>
+        </div>
+        <script>
+            require(['jquery'], function () {
+                $('[name="img" ]').on('change', function () {
+                    $(this).parent().attr('data-tips-image', this.value).css('backgroundImage', 'url(' + this.value + ')');
+                });
+            });
+            $('#img_1').click(function() {
+                $('#url_1').attr('data-tips-image', '')
+                $('#url_1').css('background-image', 'url()');
+                $('#url_1 > input').val('');
+            })
+        </script>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">活动类型</label>
+        <div class="layui-input-block">
+            <select name="activity_type" id="activity_type" required>
+                {foreach $activity_type as $vo}
+                    {if $data.type_id === $vo.id}
+                    <option value="{$vo.id|default=''}" selected>{$vo.name|default='无'}</option>
+                    {else /}
+                    <option value="{$vo.id|default=''}">{$vo.name|default='无'}</option>
+                    {/if}
+                {/foreach}
+            </select>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('活动发起人')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="name" value="{$data.name|default=''}" class="layui-input" disabled="disabled">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('联系人')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="linkman" value="{$data.linkman|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('联系人号码')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="phone" value="{$data.phone|default=''}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('开始时间')}</label>
+        <div class="layui-input-block  input-compact">
+            <input type="text" name="begin_time" id="begin_time" readonly value='{$data.begin_time|default=""}' required="required" title="{:lang('请选择')}{:lang('开始时间')}" placeholder="{:lang('请选择')}{:lang('开始时间')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('结束时间')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="end_time" id="end_time" readonly value='{$data.end_time|default=""}' required="required" title="{:lang('请选择')}{:lang('结束时间')}" placeholder="{:lang('请选择')}{:lang('结束时间')}" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('是否上架')}</label>
+        <div class="layui-input-block input-compact">
+            {if $data.status === 0}
+                <input type="radio" name="status" value="0" title="上架" checked>
+                <input type="radio" name="status" value="1" title="下架">
+            {/if}
+            {if $data.status === 1}
+                <input type="radio" name="status" value="0" title="上架">
+                <input type="radio" name="status" value="1" title="下架" checked>
+            {/if}
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('其他')}</label>
+        <div class="layui-input-block input-compact">
+            <input type="text" name="annotation" id="annotation" value='{$data.annotation|default=""}' title="{:lang('请输入')}{:lang('其他相关信息')}" placeholder="{:lang('请输入')}{:lang('其他相关信息')}" class="layui-input">
+        </div>
+    </div>
+    
+    <div class="layui-form-item">
+        <label class="layui-form-label">{:lang('内容')}</label>
+        <div class="layui-input-block">
+            <textarea name="content" id="content" placeholder="{:lang('请输入')}{:lang('内容')}" title="{:lang('请输入')}{:lang('内容')}" style="width:100%;height:500px;margin:0px" class="layui-textarea">
+                {$data.content|default=''}
+            </textarea>
+        </div>
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+    <div class="layui-form-item text-center">
+        <button class="layui-btn" type='submit' lay-submit="">
+            {:lang('保存')}
+        </button>
+        <button class="layui-btn layui-btn-danger" type='button' data-open="{:url('index')}">
+            {:lang('返回')}
+        </button>
+    </div>
+
+    <script>
+        window.form.render();
+        $(function () {
+            require(['ueditor'], function () {
+                var editor = window.createEditor('[ name="content"]', 'basic');
+            });
+        });
+        form.verify({
+            image: function(value, item){
+                if(value.length <= 0) {
+                    return '图片未上传';
+                }
+            },
+        })
+        function newDate() {
+            var endDate=[];
+            $('#begin_time').each(function(index){
+                var _this=this;
+                laydate.render({
+                    elem: _this,
+                    type: 'datetime',
+                    max: 0,
+                    done: function(value, date){
+                        // $(_this).parent().siblings('td[name=endDate]').find('input').val(value);
+                        endDate[index].config.min ={
+                            year:date.year,
+                            month:date.month-1, //关键
+                            date: date.date,
+                        };
+                    }
+                });
+            });
+            $('#end_time').each(function (index) {
+                var _this=this;
+                endDate[index]=laydate.render({
+                    elem:_this,
+                    type: 'datetime'
+                    // min: $(_this).siblings('td[name=beginDate]').find('input').val()
+                });
+            });
+        };
+        newDate();
+    </script>
+    <style>
+        .before::after{
+            content: '*';
+            color: red;
+            position: absolute;
+            margin-left: 4px;
+            font-weight: bold;
+            line-height: 1.8em;
+        }
+    </style>
+</form>

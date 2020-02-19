@@ -1,0 +1,36 @@
+{extend name='extra@admin/form'}
+
+{block name="items"}
+<div class="layui-form-item">
+    <label class="layui-form-label">{:lang('用户名称')}</label>
+    <div class="layui-input-block">
+        <input class="layui-input" name="username" value="" title="{:lang('请输入')}{:lang('用户名称')}" placeholder="{:lang('请输入')}{:lang('用户名称')}" required>
+    </div>
+</div>
+{include file="admin@user/form_items_phone"}
+{include file="admin@user/form_items_password"}
+{include file="admin@user/form_items_auth"}
+{include file="admin@user/form_items_misc"}
+{/block}
+
+{block name="script"}
+<script>
+    $('#form').attr('data-callback', 'formCallback');
+    function formCallback(res) {
+        switch (res.code) {
+            case 1:
+                var url = '{:url("$classuri/qrcode")}' + '?' + $.param({'id': res.data.id});
+                $.msg.success(res.msg, 1.5, function () {
+                    $.form.modal(url, null, '查看二维码');
+                });
+                break;
+
+            default:
+                $.msg.error(res.msg);
+                break;
+        }
+
+        return false;
+    }
+</script>
+{/block}

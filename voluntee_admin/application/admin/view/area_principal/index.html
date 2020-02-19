@@ -1,0 +1,74 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+<div class="nowrap pull-right">
+    <button class="layui-btn layui-btn-small" data-modal='{:url("$classuri/add")}' data-title="添加区域负责人">
+        添加区域负责人
+    </button> 
+</div>
+<style>
+.ibox-title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.box-pane{
+    height: 0px!important;
+}
+</style>
+{/block}
+{block name="list"}
+<form onsubmit="return false;" data-auto="" method="POST">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>显示名称</th>
+                <th class='text-center'>医师名称</th>
+                <th class='text-center'>手机号</th>
+                <th class='text-center'>所属单位</th>
+                <th class='text-center'>所属科室</th>
+                <th class='text-center'>添加时间</th>
+                <th class='text-center'>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='text-center'>{$vo.nickname|default="<span style='color:gray;'>未备注</span>"}</td>
+                <td class='text-center'>{$vo.name}</td>
+                <td class='text-center'>{$vo.phone|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.unit_name|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.office_name|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{:date('Y-m-d H:i:s', $vo.create_time)}</td>
+                <td class='text-center nowrap'>
+                    {if auth("$classuri/edit")}
+                        <span class="text-explode">|</span>
+                        <a data-modal='{:url("$classuri/edit")}?id={$vo.id}' data-title="编辑" href="javascript:void(0)">
+                            编辑
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/status")}
+                        <span class="text-explode">|</span> 
+                        <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="1" href="javascript:void(0)">
+                            启用
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/qrcode")}
+                        <span class="text-explode">|</span>
+                            <a data-modal='{:url("$classuri/qrcode")}?id={$vo.id}' data-title="查看二维码" href="javascript:void(0)">
+                            查看二维码
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/del") && $vo.id != 29}
+                        <span class="text-explode">|</span>
+                        <a data-action='{:url("$classuri/del")}' data-update="{$vo.id}" href="javascript:void(0)">
+                            删除
+                        </a> 
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </td>
+    </table>
+</form>
+{/block}

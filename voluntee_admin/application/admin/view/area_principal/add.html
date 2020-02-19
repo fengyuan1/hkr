@@ -1,0 +1,122 @@
+<style>
+    .layui-box .layui-form-item {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin: 10px 0 10px 0;
+    }
+    
+    .layui-box .layui-form-label {
+        flex: 1;
+        margin: 0 5px 0 40px;
+    }
+    
+    .layui-box .layui-input-block {
+        flex: 7;
+        margin: 0 40px 0 5px;
+    }
+    
+    .this {
+        padding: 20px 0 20px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .this-pane {
+        height: 40px;
+        width: 100%;
+        padding-left: 40px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .this-pane-item {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    .this-table {
+        width: 720px;
+        margin-top: 10px;
+    }
+</style>
+
+<div class="this">
+    <div class="this-pane">
+        <div class="this-pane-item">
+            <span>请选择一个负责人</span>
+        </div>
+        <div class="this-pane-item">
+            <input class="input-sm form-control" id="search" type="text" name="name" value="" placeholder="义工名称/手机号" style="width: 400px;">
+        </div>
+        <div class="this-pane-item">
+            <button type="button" class="btn btn-sm btn-white" onclick="tableLoad()">
+                <i class="fa fa-search"></i> {:lang('搜索')}
+            </button>
+        </div>
+    </div>
+
+    <div class="this-table">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th class='text-center'>义工名称</th>
+                    <th class='text-center'>性别</th>
+                    <th class='text-center'>联系电话</th>
+                </tr>
+            </thead>
+            <tbody>
+                {include file="admin@area_principal/item"}
+            </tbody>
+        </table>
+    </div>
+
+    {include file="extra@admin/include/line"}
+
+    <div class="this-buttons text-center">
+        <button class="layui-btn" type="button" onclick="confirm();">
+            确 认
+        </button>
+        <button class="layui-btn layui-btn-danger" type="button" data-confirm="确定要取消吗？" data-close>
+            取 消
+        </button>
+    </div>
+</div>
+
+<script>
+    function tableLoad() {
+        var loadingIndex = $.msg.loading();
+        $.ajax({
+            url: '{:url("$classuri/add")}' + '?' + $.param({
+                'action': 'get_yigong',
+                'search': $('#search').val()
+            }),
+            success: function(html) {
+                $.msg.close(loadingIndex);
+                $('.this-table').find('tbody').html(html);
+            },
+            error: function(res) {
+                $.msg.close(loadingIndex);
+                $.msg.error('无法获取负责人信息');
+            }
+        });
+    }
+
+    function confirm() {
+        var id = $('input[type=radio]:checked').val();
+        if (!id) {
+            $.msg.error('请选择一个负责人');
+            return false;
+        }
+
+        var url = '{:url("$classuri/add")}' + '?' + $.param({
+            'action': 'next',
+            'id': id
+        });
+        $.form.modal(url, null, '添加管理区域');
+    }
+</script>
+
+{include file="extra@admin/include/form_script"}

@@ -1,0 +1,113 @@
+{extend name='extra@admin/list'} 
+{block name="title"}
+<h5>{$title}</h5>
+{/block} 
+{block name="pane"}
+<form class="animated form-search" action="__SELF__" onsubmit="return false" method="get">
+    <div class="row">
+        <div class="col-xs-4">
+            <div class="form-group">
+                <input class="input-sm form-control" id="this-date" name="time" value="{$Think.get.time|default=''}" placeholder="选择日期" readonly="readonly">
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="form-group">
+                <select name="status" class="input-sm form-control">
+                    {foreach $select as $vo}
+                    {if $Think.get.status === $vo.value}
+                    <option value="{$vo.value}" selected>{:lang($vo.name)}</option>
+                    {else /}
+                    <option value="{$vo.value}">{:lang($vo.name)}</option>
+                    {/if}
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="form-group">
+                <button type="submit" class="btn btn-sm btn-white ico-search">
+                    <i class="fa fa-search"></i> {:lang('搜索')}
+                </button>
+            </div>
+        </div>
+        <script>
+            laydate.render({
+                elem: '#this-date',
+                range: true,
+                format: 'yyyy/MM/dd',
+                btns: ['confirm']
+            });
+        </script>
+    </div>
+</form>
+{/block} 
+{block name="list"}
+<form onsubmit="return false;" data-auto="" method="POST">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th class='text-center'>活动主题</th>
+                <th class='text-center'>活动图片</th>
+                <th class='text-center'>活动类型</th>
+                <th class='text-center'>活动地址</th>
+                <th class='text-center'>活动开始时间</th>
+                <th class='text-center'>活动结束时间</th>
+                <th class='text-center'>活动发起人</th>
+                <th class='text-center'>发起人联系电话</th>
+                <th class='text-center'>发布时间</th>
+                <th class='text-center'>是否上架</th>
+                <th class='text-center'>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $list as $key=>$vo}
+            <tr>
+                <td class='text-center'>{$vo.activity_name|default="<span style='color:gray;'>未备注</span>"}</td>
+                <td class='text-center'>
+                    <img height="50px" src="{$vo.img|default=''}" alt="" class="layui-imgs">
+                </td>
+                <td class='text-center'>{$vo.type_name|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.address|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.begin_time|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.end_time|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.truename|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.phone|default="<span style='color:gray;'>无</span>"}</td>
+                <td class='text-center'>{$vo.create_time|default="<span style='color:gray;'>无</span>"}</td>
+                {if $vo.status === 0}
+                <td class='text-center' style="color: green;">{$vo.status_msg}</td>
+                {/if}
+                {if $vo.status === 1}
+                <td class='text-center' style="color: red;">{$vo.status_msg}</td>
+                {/if}
+                <td class='text-center nowrap'>
+                    {if auth("$classuri/edit")}
+                        <a data-open='{:url("$classuri/edit")}?id={$vo.id}' href="javascript:void(0)">
+                            编辑
+                        </a> 
+                    {/if} 
+                    {if auth("$classuri/status")}
+                        <span class="text-explode">|</span>
+                        {if $vo.status === 0}
+                        <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="1" href="javascript:void(0)">
+                            下架
+                        </a> 
+                        {/if}
+                        {if $vo.status === 1}
+                        <a data-action='{:url("$classuri/status")}' data-update="{$vo.id}" data-value="0" href="javascript:void(0)">
+                            上架
+                        </a> 
+                        {/if}
+                    {/if} 
+                    {if auth("$classuri/del")}
+                        <span class="text-explode">|</span>
+                        <a data-action='{:url("$classuri/del")}' data-update="{$vo.id}" href="javascript:void(0)">
+                            删除
+                        </a> 
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </td>
+    </table>
+</form>
+{/block}
